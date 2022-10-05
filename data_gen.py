@@ -4,6 +4,24 @@ from scipy.special import gamma
 
 def pendulum(n=10000, n_t=10, g_range=None, theta_range=None, ell_range=None, m_range=None, t_spread=None,
              ell_spread=None, seed=42):
+    """_summary_
+
+    Args:
+        n (int, optional): Number of data points. Defaults to 10000.
+        n_t (int, optional): Number of moments in time. Defaults to 10.
+        g_range (_type_, optional): Range of gravitational constant values?. Defaults to None.
+        theta_range (_type_, optional): Range of theta values for pendulum. Defaults to None.
+        ell_range (_type_, optional): Range of L, length values. Defaults to None.
+        m_range (_type_, optional): Range of mass values. Defaults to None.
+        t_spread (_type_, optional): ??. Defaults to None.
+        ell_spread (_type_, optional): ??. Defaults to None.
+        seed (int, optional): Random seed for generating data points, if you change this you will get different numbers. Defaults to 42.
+
+    Returns:
+        _type_: _description_
+    """
+    
+    
     if g_range is None:
         g_range = [5, 15]
     if theta_range is None:
