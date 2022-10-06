@@ -118,15 +118,27 @@ def pendulum(n=10000, n_t=10, g_range=None, theta_range=None, ell_range=None, m_
     ell_sigma = ell_spreads * ell
     ell = ell + ell_sigma
 
+    # Feature vector is filled with:
+    # 1) theta values with an uniform scatter (systematic?)
+    # 2) L + scatter (aleatoric systematic, normal, comes from measurement error)
+    # 3) m values also have an uniform scatter (systematic?)
+    # 4) t, or period + scatter (aleatoric statistical, normal)
+    # g is independent of m and theta, although you can use them to introduce
+    # additional systematics, which they didn't do in the paper
+    # i.e. moving away from the small angle approximation
+    # epistemic uncertainty is in theta and g being outside the allowed values?!
     feat = np.concatenate([theta, ell, m, t], axis=1)
     y = g
 
-    # statistical uncertainty
+    # [Aleatoric] statistical uncertainty (OG comment)
+    # is then estimated from adding noise to the period
     delta_t = np.std(t_sigma, axis=1) / np.sqrt(2) * gamma((n_t-1)/2) / gamma(n_t/2)
     mean_t = np.mean(t, axis=1)
     ell = ell.reshape(n, )
     delta_ell = ell * ell_scales.reshape(n, )
     calc_y = 4 * np.pi ** 2 * ell / mean_t ** 2
+    # propagating noise in each input variable to the final calculation of g:
+    # total predicted uncertainty is added in quadrature
     delta_y = 4 * np.pi ** 2 / mean_t ** 2 * np.sqrt((2 * ell * delta_t / mean_t) ** 2 + delta_ell ** 2)
 
     return feat, y, calc_y, delta_y
